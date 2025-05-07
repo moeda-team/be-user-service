@@ -30,9 +30,18 @@ export class AuthController {
         });
       }
       const token = signToken({ userId: user.id, email: user.email });
+      const expiresIn = Number(process.env.JWT_ACCESS_EXPIRES_IN);
+      const expiresOn = Math.floor(Date.now() / 1000) + expiresIn;
+
       return ResponseHandler.success(res, {
         message: 'Login successful',
-        data: { token },
+        data: {
+          token_type: 'Bearer',
+          expires_in: expiresIn,
+          ext_expires_in: expiresIn,
+          access_token: token,
+          expires_on: expiresOn.toString(),
+        },
       });
     } catch (error) {
       logger.error('Error logging in:', error);
