@@ -78,14 +78,3 @@ export function generateTokenPair(payload: Partial<JwtPayload>): TokenPair {
     refreshToken: signToken(payload, TokenType.REFRESH),
   };
 }
-
-export function refreshAccessToken(refreshToken: string): TokenPair {
-  try {
-    const decoded = verifyToken(refreshToken, TokenType.REFRESH);
-    const { userId, email, ...rest } = decoded;
-
-    return generateTokenPair({ userId, email, ...rest });
-  } catch (error) {
-    throw new JwtError('Invalid refresh token');
-  }
-}
