@@ -18,7 +18,7 @@ export class UserController {
         data: users,
       });
     } catch (error) {
-      logger.error('Error getting menus:', error);
+      logger.error('Error getting users:', error);
       return ResponseHandler.error(res, {
         message: 'Internal server error',
         statusCode: 500,
