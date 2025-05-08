@@ -26,6 +26,7 @@ model User {
   gender       String   @db.VarChar(10)
   phone_number String   @db.VarChar(20)
   fee          Float
+  role         String   @default("EMPLOYEE") @db.VarChar(20)
   status       String   @default("active") @db.VarChar(50)
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")

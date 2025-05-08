@@ -5,17 +5,31 @@ const JWT_ACCESS_SECRET: Secret =
   process.env.JWT_ACCESS_SECRET || crypto.randomBytes(64).toString('hex');
 const JWT_REFRESH_SECRET: Secret =
   process.env.JWT_REFRESH_SECRET || crypto.randomBytes(64).toString('hex');
-const JWT_ACCESS_EXPIRES_IN = process.env.JWT_ACCESS_EXPIRES_IN || '15m';
-const JWT_REFRESH_EXPIRES_IN = process.env.JWT_REFRESH_EXPIRES_IN || '7d';
+const JWT_ACCESS_EXPIRES_IN = process.env.JWT_ACCESS_EXPIRES_IN;
+const JWT_REFRESH_EXPIRES_IN = process.env.JWT_REFRESH_EXPIRES_IN;
 
 export enum TokenType {
   ACCESS = 'access',
   REFRESH = 'refresh',
 }
 
+export enum UserRole {
+  OWNER = 'OWNER',
+  STORE_MANAGER = 'STORE_MANAGER',
+  EMPLOYEE = 'EMPLOYEE',
+}
+
+// Role hierarchy for RBAC
+const roleHierarchy: Record<UserRole, UserRole[]> = {
+  [UserRole.OWNER]: [UserRole.OWNER, UserRole.STORE_MANAGER, UserRole.EMPLOYEE],
+  [UserRole.STORE_MANAGER]: [UserRole.STORE_MANAGER, UserRole.EMPLOYEE],
+  [UserRole.EMPLOYEE]: [UserRole.EMPLOYEE],
+};
+
 export interface JwtPayload extends Omit<BaseJwtPayload, 'aud'> {
   userId: string;
   email: string;
+  role?: UserRole;
   tokenType: TokenType;
   deviceId?: string;
   tokenId?: string;
@@ -50,6 +64,7 @@ export function signToken(
     ...payload,
     userId: payload.userId || '',
     email: payload.email || '',
+    role: payload.role || undefined,
     tokenType: type,
     tokenId: generateTokenId(),
     iat: Math.floor(Date.now() / 1000),
@@ -77,4 +92,26 @@ export function generateTokenPair(payload: Partial<JwtPayload>): TokenPair {
     accessToken: signToken(payload, TokenType.ACCESS),
     refreshToken: signToken(payload, TokenType.REFRESH),
   };
+}
+
+/**
+ * Checks if a user with the given role has permission to access a resource requiring the specified role
+ * @param userRole The role of the user attempting to access the resource
+ * @param requiredRole The minimum role required to access the resource
+ * @returns True if the user has permission, false otherwise
+ */
+export function hasPermission(userRole: UserRole, requiredRole: UserRole): boolean {
+  if (!userRole || !requiredRole) return false;
+
+  // Check if the user's role is in the hierarchy of the required role
+  return roleHierarchy[userRole]?.includes(requiredRole) || false;
+}
+
+/**
+ * Gets all permissions available to a specific role
+ * @param role The role to get permissions for
+ * @returns Array of roles that this role has access to
+ */
+export function getRolePermissions(role: UserRole): UserRole[] {
+  return roleHierarchy[role] || [];
 }
