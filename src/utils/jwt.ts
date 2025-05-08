@@ -19,7 +19,6 @@ export enum UserRole {
   EMPLOYEE = 'EMPLOYEE',
 }
 
-// Role hierarchy for RBAC
 const roleHierarchy: Record<UserRole, UserRole[]> = {
   [UserRole.OWNER]: [UserRole.OWNER, UserRole.STORE_MANAGER, UserRole.EMPLOYEE],
   [UserRole.STORE_MANAGER]: [UserRole.STORE_MANAGER, UserRole.EMPLOYEE],
@@ -94,24 +93,12 @@ export function generateTokenPair(payload: Partial<JwtPayload>): TokenPair {
   };
 }
 
-/**
- * Checks if a user with the given role has permission to access a resource requiring the specified role
- * @param userRole The role of the user attempting to access the resource
- * @param requiredRole The minimum role required to access the resource
- * @returns True if the user has permission, false otherwise
- */
 export function hasPermission(userRole: UserRole, requiredRole: UserRole): boolean {
   if (!userRole || !requiredRole) return false;
 
-  // Check if the user's role is in the hierarchy of the required role
   return roleHierarchy[userRole]?.includes(requiredRole) || false;
 }
 
-/**
- * Gets all permissions available to a specific role
- * @param role The role to get permissions for
- * @returns Array of roles that this role has access to
- */
 export function getRolePermissions(role: UserRole): UserRole[] {
   return roleHierarchy[role] || [];
 }
