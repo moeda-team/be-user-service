@@ -60,7 +60,7 @@ export class UserController {
     try {
       const existingUser = await prisma.user.findFirst({
         where: {
-          OR: [{ email: userData.email }, { phone_number: userData.phone_number }],
+          OR: [{ email: userData.email }, { phoneNumber: userData.phoneNumber }],
         },
       });
       if (existingUser) {
@@ -80,7 +80,7 @@ export class UserController {
           password: hashedPassword,
           address: userData.address,
           gender: userData.gender,
-          phone_number: userData.phone_number,
+          phoneNumber: userData.phoneNumber,
           fee: userData.fee,
           status: userData.status,
         },
@@ -115,7 +115,7 @@ export class UserController {
 
       const existingUser = await prisma.user.findFirst({
         where: {
-          OR: [{ email: userData.email }, { phone_number: userData.phone_number }],
+          OR: [{ email: userData.email }, { phoneNumber: userData.phoneNumber }],
         },
       });
       if (existingUser && existingUser.id !== id) {
@@ -133,7 +133,7 @@ export class UserController {
           email: userData.email,
           address: userData.address,
           gender: userData.gender,
-          phone_number: userData.phone_number,
+          phoneNumber: userData.phoneNumber,
           fee: userData.fee,
           status: userData.status,
         },
