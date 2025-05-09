@@ -35,11 +35,15 @@ export const validateCreateUser = [
     .isMobilePhone('any')
     .withMessage('Invalid phone number'),
   body('fee')
+    .optional()
     .isNumeric()
     .withMessage('Fee must be a number')
     .custom(value => value >= 0)
     .withMessage('Fee must be non-negative'),
-  body('status').optional(),
+  body('status')
+    .optional()
+    .isIn(['active', 'inactive'])
+    .withMessage('Status must be active or inactive'),
   (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -96,7 +100,10 @@ export const validateUpdateUser = [
     .withMessage('Fee must be a number')
     .custom(value => value >= 0)
     .withMessage('Fee must be non-negative'),
-  body('status').optional(),
+  body('status')
+    .optional()
+    .isIn(['active', 'inactive'])
+    .withMessage('Status must be active or inactive'),
   (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
