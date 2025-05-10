@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import prisma from '../lib/prisma';
 import { comparePassword } from '../utils/hash';
-import { signToken, UserRole } from '../utils/jwt';
+import { signToken } from '../utils/jwt';
 import { ResponseHandler } from '../utils/response/responseHandler';
 import { logger } from '../utils/logger';
 
@@ -29,9 +29,7 @@ export class AuthController {
           statusCode: 401,
         });
       }
-      // Convert the user's role string to UserRole enum type
-      const userRole = user.role as UserRole;
-      const token = signToken({ userId: user.id, email: user.email, role: userRole });
+      const token = signToken({ userId: user.id });
       const expiresIn = Number(process.env.JWT_ACCESS_EXPIRES_IN);
       const expiresOn = Math.floor(Date.now() / 1000) + expiresIn;
 

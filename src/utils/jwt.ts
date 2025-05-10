@@ -27,8 +27,6 @@ const roleHierarchy: Record<UserRole, UserRole[]> = {
 
 export interface JwtPayload extends Omit<BaseJwtPayload, 'aud'> {
   userId: string;
-  email: string;
-  role?: UserRole;
   tokenType: TokenType;
   deviceId?: string;
   tokenId?: string;
@@ -62,8 +60,6 @@ export function signToken(
   const tokenPayload: JwtPayload = {
     ...payload,
     userId: payload.userId || '',
-    email: payload.email || '',
-    role: payload.role || undefined,
     tokenType: type,
     tokenId: generateTokenId(),
     iat: Math.floor(Date.now() / 1000),

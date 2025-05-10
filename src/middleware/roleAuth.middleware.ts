@@ -1,19 +1,25 @@
 import { Request, Response, NextFunction } from 'express';
 import { ResponseHandler } from '../utils/response/responseHandler';
 import { hasPermission, UserRole } from '../utils/jwt';
+import prisma from '../lib/prisma';
 
 export function roleAuth(requiredRole: UserRole) {
-  return (req: Request, res: Response, next: NextFunction) => {
-    const user = (req as Request & { user?: { role?: UserRole } }).user;
+  return async (req: Request, res: Response, next: NextFunction) => {
+    const user = (req as Request & { user: { userId: string } }).user;
 
-    if (!user) {
+    const getUser = await prisma.user.findUnique({
+      where: {
+        id: user.userId,
+      },
+    });
+    if (!getUser) {
       return ResponseHandler.error(res, {
-        message: 'Authentication required',
-        statusCode: 401,
+        message: 'User not found',
+        statusCode: 404,
       });
     }
 
-    if (!user.role || !hasPermission(user.role, requiredRole)) {
+    if (!getUser.role || !hasPermission(getUser.role as UserRole, requiredRole)) {
       return ResponseHandler.error(res, {
         message: 'Insufficient permissions',
         statusCode: 403,
