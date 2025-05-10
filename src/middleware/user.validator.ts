@@ -28,7 +28,7 @@ export const validateCreateUser = [
     .withMessage('Password must contain at least one special character (@$!%*?&)'),
   body('address').trim().notEmpty().withMessage('Address is required'),
   body('gender').isIn(['male', 'female']).withMessage('Gender must be male or female'),
-  body('phone_number')
+  body('phoneNumber')
     .trim()
     .notEmpty()
     .withMessage('Phone number is required')
@@ -87,7 +87,7 @@ export const validateUpdateUser = [
     .withMessage('Password must contain at least one special character (@$!%*?&)'),
   body('address').optional().trim().notEmpty().withMessage('Address cannot be empty'),
   body('gender').optional().isIn(['male', 'female']).withMessage('Gender must be male or female'),
-  body('phone_number')
+  body('phoneNumber')
     .optional()
     .trim()
     .notEmpty()
