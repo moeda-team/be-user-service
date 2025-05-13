@@ -4,7 +4,7 @@ import { logger } from '../utils/logger';
 
 dotenv.config();
 
-const defaultSchema = process.env.DB_SCHEMA || 'menu';
+const defaultSchema = process.env.DB_SCHEMA || 'users';
 
 const poolConfig: PoolConfig = {
   user: process.env.DB_USER || 'postgres',

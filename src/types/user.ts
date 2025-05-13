@@ -6,11 +6,11 @@ export interface User {
   password: string;
   address: string;
   gender: string;
-  phone_number: string;
+  phoneNumber: string;
   fee: number;
   status: string;
-  created_at: Date;
-  updated_at: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface CreateUserDTO {
@@ -20,7 +20,7 @@ export interface CreateUserDTO {
   password: string;
   address: string;
   gender: string;
-  phone_number: string;
+  phoneNumber: string;
   fee: number;
   status: string;
 }

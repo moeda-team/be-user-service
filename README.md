@@ -1,4 +1,4 @@
-# Backend Menu Services API
+# Backend User Services API
 
 A Node.js TypeScript REST API service for managing restaurant users with industry-standard practices.
 
@@ -47,22 +47,15 @@ npm start
 
 ## API Endpoints
 
-### Menu Endpoints
+### User Endpoints
 
-- `GET /api/v1/menu/health` - Health check endpoint (requires basic auth)
-- `GET /api/v1/menu` - Get all menus
-- `GET /api/v1/menu/:id` - Get menu by ID
-- `POST /api/v1/menu` - Create new menu (with validation)
-- `PUT /api/v1/menu/:id` - Update menu by ID (with validation)
-- `DELETE /api/v1/menu/:id` - Delete menu by ID
-
-### Category Endpoints
-
-- `GET /api/v1/category` - Get all categories
-- `GET /api/v1/category/:id` - Get category by ID
-- `POST /api/v1/category` - Create new category
-- `PUT /api/v1/category/:id` - Update category by ID
-- `DELETE /api/v1/category/:id` - Delete category by ID
+- `GET /api/v1/users/health` - Health check endpoint (requires basic auth)
+- `GET /api/v1/users` - Get all users
+- `GET /api/v1/users/:id` - Get user by ID
+- `POST /api/v1/users` - Create new user (with validation)
+- `PUT /api/v1/users/:id` - Update user by ID (with validation)
+- `DELETE /api/v1/users/:id` - Delete user by ID
+- `POST /api/v1/auth/login` - User login
 
 ## Scripts
 
@@ -100,13 +93,13 @@ docker-compose down
 1. Build the Docker image:
 
 ```bash
-docker build -t menu-service .
+docker build -t user-service .
 ```
 
 2. Run the container:
 
 ```bash
-docker run -p 3000:3000 -e DATABASE_URL=your_database_url menu-service
+docker run -p 3000:3000 -e DATABASE_URL=your_database_url user-service
 ```
 
 Note: Make sure to provide the correct DATABASE_URL when running with Docker.

@@ -28,18 +28,22 @@ export const validateCreateUser = [
     .withMessage('Password must contain at least one special character (@$!%*?&)'),
   body('address').trim().notEmpty().withMessage('Address is required'),
   body('gender').isIn(['male', 'female']).withMessage('Gender must be male or female'),
-  body('phone_number')
+  body('phoneNumber')
     .trim()
     .notEmpty()
     .withMessage('Phone number is required')
     .isMobilePhone('any')
     .withMessage('Invalid phone number'),
   body('fee')
+    .optional()
     .isNumeric()
     .withMessage('Fee must be a number')
     .custom(value => value >= 0)
     .withMessage('Fee must be non-negative'),
-  body('status').optional(),
+  body('status')
+    .optional()
+    .isIn(['active', 'inactive'])
+    .withMessage('Status must be active or inactive'),
   (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -83,7 +87,7 @@ export const validateUpdateUser = [
     .withMessage('Password must contain at least one special character (@$!%*?&)'),
   body('address').optional().trim().notEmpty().withMessage('Address cannot be empty'),
   body('gender').optional().isIn(['male', 'female']).withMessage('Gender must be male or female'),
-  body('phone_number')
+  body('phoneNumber')
     .optional()
     .trim()
     .notEmpty()
@@ -96,7 +100,10 @@ export const validateUpdateUser = [
     .withMessage('Fee must be a number')
     .custom(value => value >= 0)
     .withMessage('Fee must be non-negative'),
-  body('status').optional(),
+  body('status')
+    .optional()
+    .isIn(['active', 'inactive'])
+    .withMessage('Status must be active or inactive'),
   (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
