@@ -11,7 +11,8 @@ export const config = {
   host: process.env.DB_HOST || 'localhost',
   database: process.env.DB_NAME || 'cafe_db',
   password: process.env.DB_PASSWORD || 'postgres',
-  portdb: parseInt(process.env.DB_PORT || '5432'),
+  dbport: parseInt(process.env.DB_PORT || '5432'),
+  dburl: process.env.DATABASE_URL || '5432',
 } as const;
 
 export const isProduction = config.nodeEnv === 'production';
