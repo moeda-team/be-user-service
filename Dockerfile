@@ -1,24 +1,55 @@
-# Use a stable Node.js version with Alpine
-FROM node:20-alpine
+# Multi-stage build for production
+FROM node:20-alpine as builder
 
-# Set working directory
+# Install system dependencies
+RUN apk add --no-cache openssl libc6-compat
+
 WORKDIR /app
 
 # Copy package files
 COPY package*.json ./
 COPY prisma ./prisma/
 
-# Install all dependencies (including dev dependencies)
-RUN npm install
-
-# Copy the rest of the app
-COPY . .
+# Install all dependencies
+RUN npm ci
 
 # Generate Prisma client
-RUN npm run prisma:generate
+RUN npx prisma generate
 
-# Expose the development port
+# Copy source code
+COPY . .
+
+# Build the application
+RUN npm run build
+
+# Production stage
+FROM node:20-alpine as runner
+
+# Install system dependencies
+RUN apk add --no-cache openssl libc6-compat curl
+
+WORKDIR /app
+
+# Create non-root user
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S nextjs -u 1001
+
+# Copy package files
+COPY package*.json ./
+
+# Install only production dependencies
+RUN npm ci --only=production && npm cache clean --force
+
+# Copy built application from builder stage
+COPY --from=builder --chown=nextjs:nodejs /app/dist ./dist
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
+
+# Switch to non-root user
+USER nextjs
+
+# Expose port
 EXPOSE 3000
 
-# Start the app (e.g., using ts-node-dev or nodemon)
-CMD ["npm", "run", "dev"]
+# Start the application
+CMD ["node", "dist/index.js"]
