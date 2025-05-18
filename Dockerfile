@@ -1,45 +1,24 @@
-# Build stage
-FROM node:20-alpine AS builder
+# Use a stable Node.js version with Alpine
+FROM node:20-alpine
 
+# Set working directory
 WORKDIR /app
 
 # Copy package files
 COPY package*.json ./
 COPY prisma ./prisma/
 
-# Install dependencies
-RUN npm ci
+# Install all dependencies (including dev dependencies)
+RUN npm install
 
-# Copy source code
+# Copy the rest of the app
 COPY . .
 
 # Generate Prisma client
 RUN npm run prisma:generate
 
-# Build the application
-RUN npm run build
-
-# Production stage
-FROM node:20-alpine
-
-WORKDIR /app
-
-# Copy package files
-COPY package*.json ./
-COPY prisma ./prisma/
-
-# Install production dependencies only
-RUN npm ci --only=production
-
-# Copy built application from builder stage
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-
-# Set environment variables
-ENV NODE_ENV=production
-
-# Expose the port the app runs on
+# Expose the development port
 EXPOSE 3000
 
-# Start the application
-CMD ["npm", "start"]
+# Start the app (e.g., using ts-node-dev or nodemon)
+CMD ["npm", "run", "dev"]
