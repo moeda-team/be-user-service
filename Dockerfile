@@ -37,9 +37,6 @@ RUN adduser -S nextjs -u 1001
 # Copy package files
 COPY package*.json ./
 
-# Install only production dependencies
-RUN npm ci --only=production && npm cache clean --force
-
 # Copy built application from builder stage
 COPY --from=builder --chown=nextjs:nodejs /app/dist ./dist
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.prisma ./node_modules/.prisma
