@@ -14,6 +14,8 @@ const poolConfig: PoolConfig = {
   port: parseInt(process.env.DB_PORT || '5432'),
 };
 
+console.log(poolConfig);
+
 const pool = new Pool(poolConfig);
 
 pool
