@@ -14,6 +14,7 @@ export interface User {
 }
 
 export interface CreateUserDTO {
+  outletId: string;
   name: string;
   position: string;
   email: string;

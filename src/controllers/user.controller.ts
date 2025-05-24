@@ -74,6 +74,7 @@ export class UserController {
 
       const user = await prisma.user.create({
         data: {
+          outletId: userData.outletId,
           name: userData.name,
           position: userData.position,
           email: userData.email,
@@ -128,6 +129,7 @@ export class UserController {
       const updatedUser = await prisma.user.update({
         where: { id },
         data: {
+          outletId: userData.outletId,
           name: userData.name,
           position: userData.position,
           email: userData.email,

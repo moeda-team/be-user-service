@@ -3,6 +3,7 @@ import { body, validationResult } from 'express-validator';
 import { ResponseHandler } from '../utils/response/responseHandler';
 
 export const validateCreateUser = [
+  body('outletId').trim().notEmpty().withMessage('Outlet ID is required'),
   body('name').trim().notEmpty().withMessage('Name is required'),
   body('position').trim().notEmpty().withMessage('Position is required'),
   body('email')
@@ -61,6 +62,7 @@ export const validateCreateUser = [
 ];
 
 export const validateUpdateUser = [
+  body('outletId').optional().trim().notEmpty().withMessage('Outlet ID is required'),
   body('name').optional().trim().notEmpty().withMessage('Name cannot be empty'),
   body('position').optional().trim().notEmpty().withMessage('Position cannot be empty'),
   body('email')

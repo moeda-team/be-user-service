@@ -29,7 +29,7 @@ export class AuthController {
           statusCode: 401,
         });
       }
-      const token = signToken({ userId: user.id });
+      const token = signToken({ userId: user.id, outletId: user.outletId! });
       const expiresIn = Number(process.env.JWT_ACCESS_EXPIRES_IN);
       const expiresOn = Math.floor(Date.now() / 1000) + expiresIn;
 
